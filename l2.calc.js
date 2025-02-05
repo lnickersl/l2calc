@@ -627,7 +627,7 @@ l2.calc.checkSet = function (char) {
 
 	char.effects.push({ id: equipedSet.skill[1], lvl: 1, skill: l2.data.tools.getSkill(equipedSet.skill[1]) });
 	if (equipedSet.shield && char.shield && equipedSet.shield.indexOf(char.shield.id) >= 0 && equipedSet.shieldSkill != null)
-		char.passives.push({ id: equipedSet.shieldSkill, lvl: 1, skill: l2.data.tools.getSkill(equipedSet.shieldSkill) });
+		char.effects.push({ id: equipedSet.shieldSkill, lvl: 1, skill: l2.data.tools.getSkill(equipedSet.shieldSkill) });
 	if (enchant6)
 		if (char.bodyUpper.grade) {
 			var ench6id = l2.data.set6Bonus[char.bodyUpper.grade.charAt(0)][char.bodyUpper.armorType];
