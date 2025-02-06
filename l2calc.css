@@ -28,6 +28,7 @@ select:disabled, input:disabled {
 
 .clear {
 	clear: both;
+	height: 2px;
 }
 .left {
 	float: left;
@@ -86,8 +87,11 @@ select:disabled, input:disabled {
 .prof-header {
 	width: 40px;
 	text-align: right;
-	padding-top: 7px;
+	padding-top: 2px;
 	margin-right: 10px;
+}
+.enemy-input {
+	max-width: 5px;
 }
 .bstat {
 	padding-left: 10px;
@@ -152,7 +156,7 @@ select:disabled, input:disabled {
 .eq-header {
 	width: 100px;
 	text-align: left;
-	padding-top: 7px;
+	padding-top: 2px;
 }
 .eq-set-header {
 	padding-top: 7px;
@@ -192,6 +196,10 @@ select:disabled, input:disabled {
 }
 
 #profession {
+	width: 210px;
+	float: left;
+}
+#enemy {
 	width: 210px;
 	float: left;
 }
