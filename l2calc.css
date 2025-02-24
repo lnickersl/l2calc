@@ -84,14 +84,29 @@ select:disabled, input:disabled {
 	width: 180px;
 }
 
+#enemy {
+	width: 141px;
+	float: left;
+}
+.enemy-stat {
+	margin-left: 4px;
+}
+.enemy-stat > input {
+	width: 51px;
+	padding-left: 2px;
+}
+.enemy-header {
+	width: 70px;
+	text-align: right;
+	padding-top: 2px;
+	margin-right: 10px;
+}
+
 .prof-header {
 	width: 40px;
 	text-align: right;
 	padding-top: 2px;
 	margin-right: 10px;
-}
-.enemy-input {
-	max-width: 5px;
 }
 .bstat {
 	padding-left: 10px;
@@ -196,10 +211,6 @@ select:disabled, input:disabled {
 }
 
 #profession {
-	width: 210px;
-	float: left;
-}
-#enemy {
 	width: 210px;
 	float: left;
 }

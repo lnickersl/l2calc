@@ -934,6 +934,12 @@ l2.ui.recalc = function () {
 	$('#patkcrit').text(stats.pCritAtk);
 	$('#mdps').text(l2.ui.tools.formatNumber(Math.round(stats.mDPS)));
 
+	$('#rpdps').text(l2.ui.tools.formatNumber(Math.round(stats.rpDPS*10)/10));
+	$('#pdmg').text(l2.ui.tools.formatNumber(Math.round(stats.pDmg)));
+	$('#pcrit').text(l2.ui.tools.formatNumber(Math.round(stats.rpCritDmg)));
+	$('#hitc').text(l2.ui.formatPercent(stats.hitChance) + '%');
+	$('#mdmg').text(l2.ui.tools.formatNumber(Math.round(stats.mDmg)));
+
 	$('#mpregen').text(stats.mpRegen);
 
 	if (l2.ui.summonView) {
@@ -989,6 +995,13 @@ l2.ui.bindProfessionFieldSet = function () {
 
 	['staying', 'running', 'walking', 'sitting'].forEach(function (moving) {
 		l2.ui.tools.addOption('#moving', moving, moving);
+	});
+
+	for (var i = -5; i <= 5; i++)
+		l2.ui.tools.addOption('#enemyResistLvl', i, i);
+
+	['Off', 'On', 'Bless'].forEach(function (type) {
+		l2.ui.tools.addOption('#shotsType', type, type);
 	});
 };
 

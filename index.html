@@ -53,6 +53,70 @@
 		<button id="sharebtn" style="display:none;" autocomplete="off">Share</button>
 	</fieldset>
 	<div style="float: left;">
+		<fieldset id="enemy">
+			<legend>Enemy</legend>
+			<div>
+				<div class="left enemy-header">P. Def:</div>
+				<div class="left enemy-stat">
+					<input type="number" min="0" id="enemyPdef" data-model="enemyPdef" />
+				</div>
+			</div>
+			<div class="clear"></div>
+			<div>
+				<div class="left enemy-header">Evasion:</div>
+				<div class="left enemy-stat">
+					<input type="number" min="0" id="enemyEvas" data-model="enemyEvas" />
+				</div>
+			</div>
+			<div class="clear"></div>
+			<div>
+				<div class="left enemy-header">M. Def:</div>
+				<div class="left enemy-stat">
+					<input type="number" min="0" id="enemyMdef" data-model="enemyMdef" />
+				</div>
+			</div>
+			<div class="clear"></div>
+			<div>
+				<div class="left enemy-header">Skill Power:</div>
+				<div class="left enemy-stat">
+					<input type="number" min="0" id="skillPw" data-model="skillPw" />
+				</div>
+			</div>
+			<div class="clear"></div>
+			<div>
+				<div class="left enemy-header">Resist Lv:</div>
+				<div class="left enemy-stat">
+					<select id="enemyResistLvl" data-model="enemyResistLvl" autocomplete="off"></select>
+				</div>
+			</div>
+			<div class="clear"></div>
+			<div>
+				<div class="left enemy-header">Shots:</div>
+				<div class="left enemy-stat">
+					<select id="shotsType" data-model="shotsType" autocomplete="off"></select>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</fieldset>
+		<div class="clear"></div>
+		<fieldset id="enemy">
+			<legend>Real DPS</legend>
+			<div class="left">Real DPS:</div>
+			<div class="left astat" id="rpdps">1</div>
+			<div class="clear"></div>
+			<div class="left">Hit chance:</div>
+			<div class="left astat" id="hitc">1</div>
+			<div class="clear"></div>
+			<div class="left">P. Dmg:</div>
+			<div class="left astat" id="pdmg">1</div>
+			<div class="left">P. Crit:</div>
+			<div class="left astat" id="pcrit">1</div>
+			<div class="clear"></div>
+			<div class="left">M. Dmg:</div>
+			<div class="left astat" id="mdmg">1</div>
+		</fieldset>
+	</div>
+	<div style="float: left;">
 		<fieldset id="bstats">
 			<legend>Base Stats</legend>
 			<div class="left bstat-header">STR</div>
@@ -122,6 +186,8 @@
 			</div>
 		</fieldset>
 	</div>
+	<div class="clear"></div>
+	<div>
 	<fieldset id="stats">
 		<legend>Stats</legend>
 		<div id="stat-hid-level" style="display: none;">
@@ -210,6 +276,7 @@
 		<div class="left astat" id="mpregen">1</div>
 		<div class="clear"></div>
 	</fieldset>
+	</div>
 	<div class="clear"></div>
 	<div id="container">
 		<fieldset id="equipment">

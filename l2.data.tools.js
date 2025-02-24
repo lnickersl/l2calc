@@ -50,26 +50,42 @@ l2.data.tools.isMystic = function (classId) {
 	var baseClassId = base[base.length - 1];
 	return [10, 25, 38, 49].indexOf(baseClassId) >= 0;
 };
-l2.data.tools.getBaseCritical = function (weaponType) {
+l2.data.tools.getWeaponBaseData = function (weaponType, statName) {
 	for (var i = 0; i < l2.data.weaponBaseData.length; i++)
 		if (l2.data.weaponBaseData[i].name == weaponType)
-			return l2.data.weaponBaseData[i].baseCritical;
+			return l2.data.weaponBaseData[i][statName];
 	throw 'Unknown weapon type';
+}
+l2.data.tools.getBaseCritical = function (weaponType) {
+	return l2.data.tools.getWeaponBaseData(weaponType, 'baseCritical');
 };
 l2.data.tools.getBaseAtkSpeed = function (weaponType, bowFast) {
 	if (weaponType == 'bow')
 		return bowFast ? l2.data.bowAtkSpeed.fast : l2.data.bowAtkSpeed.slow;
-	for (var i = 0; i < l2.data.weaponBaseData.length; i++)
-		if (l2.data.weaponBaseData[i].name == weaponType)
-			return l2.data.weaponBaseData[i].baseAtkSpeed;
-	throw 'Unknown weapon type';
+	return l2.data.tools.getWeaponBaseData(weaponType, 'baseAtkSpeed');
 };
 l2.data.tools.getBaseAccuracy = function (weaponType) {
-	for (var i = 0; i < l2.data.weaponBaseData.length; i++)
-		if (l2.data.weaponBaseData[i].name == weaponType)
-			return l2.data.weaponBaseData[i].accuracy;
-	throw 'Unknown weapon type';
+	return l2.data.tools.getWeaponBaseData(weaponType, 'accuracy');
 };
+l2.data.tools.getIsRanged = function (weaponType) {
+	return l2.data.tools.getWeaponBaseData(weaponType, 'ranged');
+};
+l2.data.tools.isDual = function (weaponType) {
+	if (weaponType === 'dualfist' || weaponType === 'dualdagger' || weaponType === 'dual') {
+		return true;
+	}
+	return false;
+};
+l2.data.tools.getShotsMod = function (shotsType) {
+	switch (shotsType) {
+		case 'Off':
+			return 1;
+		case 'On':
+			return 2;
+		case 'Bless':
+			return 4;
+	}
+}
 l2.data.tools.sortItems = function (items) {
 	items.sort(function (i1, i2) {
 		if (i1.name < i2.name) return -1;

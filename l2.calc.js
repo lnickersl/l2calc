@@ -432,8 +432,13 @@ l2.calc.accuracy = function (char) {
 };
 
 l2.calc.realAtkSpeed = function (char, stats) {
-	if (!char.weapon || !(char.weapon.weaponType == 'bow' || char.weapon.weaponType == 'crossbow') || char.inTrueTransformation)
+	if (!char.weapon || !(char.weapon.weaponType == 'bow' || char.weapon.weaponType == 'crossbow') || char.inTrueTransformation) {
+		if (char.weapon && l2.data.tools.isDual(char?.weapon?.weaponType)) {
+			return stats.atkSpeed * 2;
+		}
+		
 		return stats.atkSpeed;
+	}
 	var reuse = char.weapon.reuse || (char.weapon.weaponType == 'bow' ? (char.weapon.bowFast ? 1500 : 820) : 400);
 	return Math.round(500000 * stats.atkSpeed / (500000 + reuse * 329.2));
 };
@@ -441,6 +446,124 @@ l2.calc.realAtkSpeed = function (char, stats) {
 l2.calc.pDPS = function (char) {
 	return (char.pAtk * (1 - char.pCritical / 1000) + char.pCritAtk * char.pCritical / 1000) * char.realAtkSpeed / 100;
 };
+
+l2.calc.pCritChance = function (char, stats) {
+	var posMod = 1;
+	var position = char.atkFrom;
+
+	if (position === 'side') {
+		posMod = 1.2;
+	}
+
+	if (position === 'behind') {
+		posMod = 1.4;
+	}
+
+	return (stats.pCritical / 10) * posMod;
+};
+
+l2.calc.hitChance = function (char, stats) {
+	var hitratio=stats.accuracy-char.enemyEvas;
+	if (hitratio<-24.5) {
+		hitratio=0.275
+	}	else if (hitratio<-20 && hitratio>=-24.5) {
+		hitratio=0.25+((hitratio+25)*5/100)
+	}	else if (hitratio<-15 && hitratio>=-20) {
+		hitratio=0.50+((hitratio+20)*3/100)
+	} else if (hitratio<-10 && hitratio>=-15) { 
+		hitratio=0.65+((hitratio+15)*2/100)
+	} else if (hitratio<-0 && hitratio>=-10) {
+		hitratio=0.75+((hitratio+10)*1.5/100)
+	} else if (hitratio<5 && hitratio>=0) {
+		hitratio=0.905+(hitratio*1/100)
+	} else if (hitratio<10 && hitratio>=5) {
+		hitratio=0.955+((hitratio-5)*0.5/100)
+	} else if (hitratio>10) {
+		hitratio=0.98
+	}
+
+	var position = char.atkFrom;
+
+	if (position=='side') {
+		hitratio=hitratio*1.1;
+	}
+	
+	if (position=='behind') {
+		hitratio=hitratio*1.2
+	}
+
+	if (hitratio>0.98) { 
+		hitratio=0.98 
+	}
+
+	return Math.round(hitratio*1000)/10;
+}
+
+l2.calc.pDmg = function (char, stats) {
+	let combatPAtk = stats.pAtk;
+
+	if (char?.weapon?.weaponType && !l2.data.tools.getIsRanged(char?.weapon?.weaponType) && char.weapon.weaponType !== 'pole') {
+		combatPAtk *= 1.1;
+	}
+
+	if (char.weapon && l2.data.tools.isDual(char.weapon.weaponType)) {
+		combatPAtk /= 2;
+	}
+
+	var Shots_Mod = l2.data.tools.getShotsMod(char.shotsType);
+
+	return (combatPAtk * Shots_Mod * 70 / char.enemyPdef) * char.enemyResistLvlMod;
+}
+
+l2.calc.rpCritDmg = function (char, stats) {
+	var baseDmg = stats.pDmg;
+
+	var addCritDmg = 0;
+	l2.calc.forEachEffect(char, 'cAtkAdd', function (op, val) {
+		if (op == 'add') { addCritDmg += val; return; };
+		throw 'not implemented';
+	});
+	return Math.floor(baseDmg * stats.pCritMultiplier + (addCritDmg * 70 / char.enemyPdef));
+};
+
+l2.calc.rpDPS = function (char, stats) {
+	var baseDmg = stats.pDmg;
+	var critRatio = stats.pCritChance / 100;
+	var hitsPerSecond = stats.realAtkSpeed / 500;
+	var critDmg = stats.rpCritDmg;
+	var hitRatio = stats.hitChance / 100;
+
+	// return (char.pAtk * (1 - char.pCritical / 1000) + char.pCritAtk * char.pCritical / 1000) * char.realAtkSpeed / 100;
+
+	return (baseDmg * (1 - critRatio) + critDmg * critRatio) * hitsPerSecond * hitRatio;
+}
+
+l2.calc.mDmg = function (char, stats) {
+	var Skill_Power = char.skillPw;
+	var M_Atk = stats.mAtk;
+	var E_M_Def = char.enemyMdef;
+	var Resist_Mod = char.enemyResistLvlMod;
+	var Shots_Mod = l2.data.tools.getShotsMod(char.shotsType);
+
+	return 91 * Skill_Power * Math.sqrt(M_Atk * Shots_Mod) * Resist_Mod / E_M_Def;
+}
+
+l2.calc.enemyResistLvlMod = function (resistLvl) {
+	switch (resistLvl) {
+		case -5: return 1.5;
+		case -4: return 1.3;
+		case -3: return 1.2;
+		case -2: return 1.15;
+		case -1: return 1.1;
+		case 0: return 1;
+		case 1: return 0.85;
+		case 2: return 0.7;
+		case 3: return 0.5;
+		case 4: return 0.3;
+		case 5: return 0.1;
+		default: return 1;
+	}
+}
 
 l2.calc.mDPS = function (char) {
 	var mPower = Math.sqrt(char.mAtk);
@@ -725,6 +848,12 @@ l2.calc.stats = function () {
 		hpPerc: l2.model.hpPercent,
 		atkFrom: l2.model.position,
 		moving: l2.model.moving,
+		shotsType: l2.model.shotsType,
+		enemyPdef: l2.model.enemyPdef,
+		enemyMdef: l2.model.enemyMdef,
+		enemyEvas: l2.model.enemyEvas,
+		enemyResistLvlMod: l2.calc.enemyResistLvlMod(l2.model.enemyResistLvl),
+		skillPw: l2.model.skillPw,
 		effects: [],
 		transformId: l2.model.transformId
 	};
@@ -840,13 +969,22 @@ l2.calc.stats = function () {
 		speed: l2.calc.speed(char),
 		evasion: l2.calc.evasion(char),
 		mDef: l2.calc.mDef(char),
-		mpRegen: l2.calc.mpRegen(char)
+		mpRegen: l2.calc.mpRegen(char),
+		
 	};
+
+	stats.pCritChance = l2.calc.pCritChance(char, stats);
 
 	stats.realAtkSpeed = l2.calc.realAtkSpeed(char, stats);
 	stats.pCritAtk = l2.calc.pCritAtk(char, stats);
 	stats.pDPS = l2.calc.pDPS(stats);
 	stats.mDPS = l2.calc.mDPS(stats);
+
+	stats.hitChance = l2.calc.hitChance(char, stats);
+	stats.pDmg = l2.calc.pDmg(char, stats);
+	stats.rpCritDmg = l2.calc.rpCritDmg(char, stats);
+	stats.rpDPS = l2.calc.rpDPS(char, stats);
+	stats.mDmg = l2.calc.mDmg(char, stats);
 
 	return stats;
 };

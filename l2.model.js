@@ -385,7 +385,67 @@ window.l2 = window.l2 || {};
 		});
 	};
 
-	var raceId = 0;
+	var enemyPdef = 1;
+	addModel('enemyPdef', function () { return enemyPdef; }, function (value) {
+		var intVal = parseInt(value);
+		if (!isNaN(intVal) && intVal >= 0) {
+			enemyPdef = intVal
+			notifyPropertyChanged('enemyPdef', enemyPdef);
+		} else
+			throw 'Invalid enemyPdef';
+	});
+
+	var enemyMdef = 1;
+	addModel('enemyMdef', function () { return enemyMdef; }, function (value) {
+		var intVal = parseInt(value);
+		if (!isNaN(intVal) && intVal >= 0) {
+			enemyMdef = intVal;
+			notifyPropertyChanged('enemyMdef', enemyMdef);
+		} else
+			throw 'Invalid enemyMdef';
+	});
+	window.l2.model.enemyMdef = enemyMdef;
+
+	var enemyEvas = 1;
+	addModel('enemyEvas', function () { return enemyEvas; }, function (value) {
+		var intVal = parseInt(value);
+		if (!isNaN(intVal) && intVal >= 0) {
+			enemyEvas = intVal;
+			notifyPropertyChanged('enemyEvas', enemyEvas);
+		} else
+			throw 'Invalid enemyEvas';
+	});
+
+	var skillPw = 1;
+	addModel('skillPw', function () { return skillPw; }, function (value) {
+		var intVal = parseInt(value);
+		if (!isNaN(intVal) && intVal >= 0) {
+			skillPw = intVal;
+			notifyPropertyChanged('skillPw', skillPw);
+		} else
+			throw 'Invalid skillPw';
+	});
+
+	var enemyResistLvl = 0;
+	addModel('enemyResistLvl', function () { return enemyResistLvl; }, function (value) {
+		var intVal = parseInt(value);
+		if (!isNaN(intVal) && intVal >= -5 && intVal <= 5) {
+			enemyResistLvl = intVal;
+			notifyPropertyChanged('enemyResistLvl', enemyResistLvl);
+		} else
+			throw 'Invalid enemyResistLvl';
+	});
+
+	var shotsType = 'Off';
+	addModel('shotsType', function () { return shotsType; }, function (value) {
+		if (['Off', 'On', 'Bless'].indexOf(value) >= 0) {
+			shotsType = value;
+			notifyPropertyChanged('shotsType', shotsType);
+		} else
+			throw 'Invalid shotsType';
+	});
+
+	var raceId = 1;
 	addModel('raceId', function () { return raceId; }, function (value) {
 		var intVal = parseInt(value);
 		if (!isNaN(intVal) && intVal >= 0 && intVal <= 5) {
